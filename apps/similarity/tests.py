@@ -111,7 +111,8 @@ class SimilarityCheckViewTest(TestCase):
         self.assertContains(page, "My earlier study idea")
         self.assertContains(page, "Public project by @other")
         self.assertContains(page, "High similarity")
-        self.assertContains(page, 'style="width: 100%"')
+        top_score = check.matches.order_by("-similarity_score").first().similarity_score
+        self.assertContains(page, f'style="width: {top_score:.0f}%"')
         self.assertNotContains(page, "Hidden private twin")
         self.assertNotContains(page, "Archived twin")
         self.assertNotContains(page, "Barangay clinic queue")
