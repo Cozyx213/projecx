@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Similarity checks{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/similarity/checks.css' %}">{% endblock %}
+{% block content %}
+<header class="page-heading">
+    <span class="eyebrow">Is your idea distinct?</span>
+    <h1>Similarity checks</h1>
+    <p class="muted">Compare a proposal with your other projects and with projects other students made public.</p>
+</header>
+<div class="checks-grid">
+    <section class="panel" aria-labelledby="history-heading">
+        <h2 id="history-heading">Check history</h2>
+        {% if rows %}
+        <div class="table-wrap">
+            <table class="check-table">
+                <thead><tr><th scope="col">Project</th><th scope="col">Checked</th><th scope="col">Matches</th><th scope="col">Highest score</th></tr></thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <th scope="row"><a href="{% url 'similarity:detail' row.check.pk %}">{{ row.check.project_version.title }}</a><span class="muted small">Version {{ row.check.project_version.version_number }}</span></th>
+                        <td>{{ row.check.created_at|date:"M j, Y · g:i A" }}</td>
+                        <td>{{ row.check.match_count }}</td>
+                        <td><span class="score-pill level-{{ row.level }}">{% if row.check.top_score is not None %}{{ row.check.top_score|floatformat:0 }}%{% else %}None{% endif %}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-checks">
+            <img src="{% static 'images/similarity/compare.svg' %}" width="200" height="120" alt="Two proposals being compared">
+            <p class="muted">No checks yet. Pick a project to see how distinct it is.</p>
+        </div>
+        {% endif %}
+    </section>
+    <aside class="panel" aria-labelledby="run-heading">
+        <h2 id="run-heading">Run a check</h2>
+        {% if choices %}
+        <p class="small muted">The latest saved version of the project is checked.</p>
+        <ul class="run-list">
+            {% for choice in choices %}
+            <li>
+                <span><strong>{{ choice.latest.title }}</strong><small>Version {{ choice.latest.version_number }} · {{ choice.project.get_status_display }}</small></span>
+                <form method="post" action="{% url 'similarity:run' choice.project.pk %}" class="run-form">
+                    {% csrf_token %}
+                    <button class="button secondary" type="submit">Check</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="small muted">You need a project before you can run a check.</p>
+        <a class="button" href="{% url 'projects:new' %}">Start a project</a>
+        {% endif %}
+    </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/similarity/checks.js' %}" defer></script>{% endblock %}

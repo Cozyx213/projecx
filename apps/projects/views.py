@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods, require_POST
 
-from apps.home.models import Project, ProjectVersion
+from apps.home.models import Project, ProjectVersion, SimilarityCheck
 
 from .forms import ProposalForm
 
@@ -132,6 +132,10 @@ def project_detail(request, pk):
         {
             "project": project, "latest": latest, "selected": selected,
             "history": history, "sections": sections,
+            "checks": SimilarityCheck.objects.filter(project_version__project=project)
+            .select_related("project_version")
+            .annotate(top_score=Max("matches__similarity_score"))
+            .order_by("-created_at", "-pk")[:3],
             "missing": [item["label"] for item in sections if not item["text"].strip()],
         },
     )

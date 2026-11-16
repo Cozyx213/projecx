@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Check results{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/similarity/checks.css' %}">{% endblock %}
+{% block content %}
+<p class="breadcrumb"><a href="{% url 'similarity:list' %}">Similarity checks</a> <span aria-hidden="true">/</span> {{ version.title }}</p>
+<header class="page-heading result-heading">
+    <div>
+        <span class="eyebrow">Version {{ version.version_number }} · Checked {{ check.completed_at|date:"M j, Y · g:i A" }}</span>
+        <h1>{{ version.title }}</h1>
+        <p class="muted">{% if top %}{{ matches|length }} similar project{{ matches|length|pluralize }} found.{% else %}No similar projects were found.{% endif %}</p>
+    </div>
+    <div class="score-summary level-{% if top %}{{ top.level }}{% else %}none{% endif %}">
+        <strong>{% if top %}{{ top.match.similarity_score|floatformat:0 }}%{% else %}0%{% endif %}</strong>
+        <span>{% if top %}{{ top.label }}{% else %}Distinct idea{% endif %}</span>
+    </div>
+</header>
+{% if not is_latest %}
+<p class="notice">This check used an earlier version. Run a new check to include your latest changes.</p>
+{% endif %}
+<div class="checks-grid">
+    <section class="panel" aria-labelledby="matches-heading">
+        <h2 id="matches-heading">Similar projects</h2>
+        {% if matches %}
+        <ol class="match-list">
+            {% for item in matches %}
+            <li>
+                <div class="match-top">
+                    <div>
+                        <h3>{% if item.own %}<a href="{% url 'projects:detail' item.project.pk %}">{{ item.match.matched_version.title }}</a>{% else %}{{ item.match.matched_version.title }}{% endif %}</h3>
+                        <span class="muted small">{% if item.own %}Your project{% else %}Public project by @{{ item.project.user.username }}{% endif %}{% if item.match.matched_version.category %} · {{ item.match.matched_version.category }}{% endif %}</span>
+                    </div>
+                    <span class="score-pill level-{{ item.level }}">{{ item.match.similarity_score|floatformat:0 }}%</span>
+                </div>
+                <div class="score-bar level-{{ item.level }}" role="img" aria-label="{{ item.match.similarity_score|floatformat:0 }} percent similar, {{ item.label|lower }}"><span data-score="{{ item.match.similarity_score|floatformat:0 }}"></span></div>
+                <p>{{ item.match.explanation }}</p>
+            </li>
+            {% endfor %}
+        </ol>
+        {% else %}
+        <div class="empty-checks">
+            <img src="{% static 'images/similarity/compare.svg' %}" width="200" height="120" alt="Two proposals being compared">
+            <p class="muted">Nothing scored above the 10% threshold among your other projects and the public projects.</p>
+        </div>
+        {% endif %}
+    </section>
+    <aside class="result-aside">
+        <section class="panel" aria-labelledby="recommend-heading">
+            <h2 id="recommend-heading">Recommendations</h2>
+            <ul class="recommend-list">
+                {% for recommendation in recommendations %}<li>{{ recommendation.suggestion }}</li>{% endfor %}
+            </ul>
+        </section>
+        <section class="panel result-actions">
+            <a class="button secondary" href="{% url 'projects:detail' project.pk %}">View proposal</a>
+            {% if project.status != "archived" %}
+            <form method="post" action="{% url 'similarity:run' project.pk %}" class="run-form">
+                {% csrf_token %}
+                <button class="button" type="submit">Check again</button>
+            </form>
+            {% endif %}
+        </section>
+    </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/similarity/checks.js' %}" defer></script>{% endblock %}

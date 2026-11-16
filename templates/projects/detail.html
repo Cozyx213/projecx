@@ -52,6 +52,24 @@
                 {% endif %}
             </form>
         </section>
+        <section class="panel" aria-labelledby="checks-heading">
+            <h2 id="checks-heading">Similarity</h2>
+            {% if checks %}
+            <ul class="check-links">
+                {% for check in checks %}
+                <li><a href="{% url 'similarity:detail' check.pk %}">Version {{ check.project_version.version_number }} check</a><span class="muted small">{{ check.created_at|date:"M j · g:i A" }} · {% if check.top_score is not None %}highest {{ check.top_score|floatformat:0 }}%{% else %}no matches{% endif %}</span></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="small muted">See whether this idea overlaps with your other projects or public ones.</p>
+            {% endif %}
+            {% if project.status != "archived" %}
+            <form method="post" action="{% url 'similarity:run' project.pk %}" class="action-list">
+                {% csrf_token %}
+                <button class="button secondary" type="submit">Check similarity</button>
+            </form>
+            {% endif %}
+        </section>
         <section class="panel" aria-labelledby="history-heading">
             <h2 id="history-heading">Version history</h2>
             <ol class="version-list">
