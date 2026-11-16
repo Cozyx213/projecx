@@ -32,7 +32,7 @@
                     </div>
                     <span class="score-pill level-{{ item.level }}">{{ item.match.similarity_score|floatformat:0 }}%</span>
                 </div>
-                <div class="score-bar level-{{ item.level }}" role="img" aria-label="{{ item.match.similarity_score|floatformat:0 }} percent similar, {{ item.label|lower }}"><span data-score="{{ item.match.similarity_score|floatformat:0 }}"></span></div>
+                <div class="score-bar level-{{ item.level }}" role="img" aria-label="{{ item.match.similarity_score|floatformat:0 }} percent similar, {{ item.label|lower }}"><span style="width: {{ item.match.similarity_score|floatformat:0 }}%"></span></div>
                 <p>{{ item.match.explanation }}</p>
             </li>
             {% endfor %}

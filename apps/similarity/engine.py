@@ -86,10 +86,9 @@ class Comparison:
 
     @property
     def strongest_section(self):
-        if not self.section_scores:
-            return None
-        name = max(self.section_scores, key=self.section_scores.get)
-        return name if self.section_scores[name] > 0 else None
+        # A shared category alone says little, so it never counts as the reason.
+        scores = {k: v for k, v in self.section_scores.items() if k != "category" and v > 0}
+        return max(scores, key=scores.get) if scores else None
 
 
 def compare(proposal, other):
@@ -160,17 +159,17 @@ def recommend(proposal, matches):
         where = f" in the {SECTIONS[strongest][0].lower()}" if strongest else ""
         if top.score >= HIGH_SCORE:
             suggestions.append(
-                f"This proposal is very close to “{title}” ({top.score}%). Consider a "
+                f"This proposal is very close to “{title}” ({top.score:.0f}%). Consider a "
                 "different core solution or a narrower group of target users."
             )
         elif top.score >= MODERATE_SCORE:
             suggestions.append(
-                f"This proposal overlaps with “{title}” ({top.score}%){where}. State "
+                f"This proposal overlaps with “{title}” ({top.score:.0f}%){where}. State "
                 "clearly what your project does differently."
             )
         else:
             suggestions.append(
-                f"The closest project is “{title}” ({top.score}%). The overlap is low, "
+                f"The closest project is “{title}” ({top.score:.0f}%). The overlap is low, "
                 "so your idea is reasonably distinct."
             )
         common = Counter(term for _, item in matches for term in item.shared_terms)

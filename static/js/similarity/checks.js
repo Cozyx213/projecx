@@ -1,8 +1,4 @@
-// Bars are sized from data-score so the page needs no inline styles.
-document.querySelectorAll(".score-bar span").forEach((bar) => {
-    requestAnimationFrame(() => { bar.style.width = `${bar.dataset.score}%`; });
-});
-
+// Prevent double submissions while a check is running.
 document.querySelectorAll(".run-form").forEach((form) => {
     form.addEventListener("submit", () => {
         const button = form.querySelector("button");

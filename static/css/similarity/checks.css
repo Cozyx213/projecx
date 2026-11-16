@@ -33,12 +33,11 @@
 .match-top { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
 .match-top h3 { margin: 0 0 2px; font-size: 1.05rem; overflow-wrap: anywhere; }
 .score-bar { height: 8px; margin: 14px 0; border-radius: 4px; background: var(--line); overflow: hidden; }
-.score-bar span { display: block; height: 100%; width: 0; border-radius: 4px; background: var(--level); transition: width .5s ease; }
+.score-bar span { display: block; height: 100%; min-width: 4px; border-radius: 4px; background: var(--level); }
 .result-aside { display: grid; gap: 24px; }
 .recommend-list { margin: 0; padding-left: 18px; font-size: 14px; }
 .recommend-list li + li { margin-top: 12px; }
 .result-actions { display: grid; gap: 10px; }
 .result-actions .button { width: 100%; }
-@media (prefers-reduced-motion: reduce) { .score-bar span { transition: none; } }
 @media (max-width: 900px) { .checks-grid { grid-template-columns: 1fr; } }
 @media (max-width: 680px) { .result-heading { display: block; } .score-summary { margin-top: 18px; display: inline-block; } }
