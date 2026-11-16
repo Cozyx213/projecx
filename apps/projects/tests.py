@@ -61,17 +61,19 @@ class ProposalFormTest(TestCase):
         invalid = self.client.post("/projects/new/", {**self.data, "title": ""})
         self.assertIn("title", invalid.context["form"].errors)
         self.assertFalse(Project.objects.exists())
-        self.assertRedirects(self.client.post("/projects/new/", self.data), "/projects/")
+        created = self.client.post("/projects/new/", self.data)
         project = Project.objects.get(user=owner)
+        detail_url = f"/projects/{project.pk}/"
+        self.assertRedirects(created, detail_url)
         first = project.versions.get()
         self.assertEqual(first.version_number, 1)
         self.assertEqual(first.features, self.data["features"])
         edit_url = f"/projects/{project.pk}/edit/"
         self.assertContains(self.client.get(edit_url), "Campus lost and found")
-        self.assertRedirects(self.client.post(edit_url, self.data), "/projects/")
+        self.assertRedirects(self.client.post(edit_url, self.data), detail_url)
         self.assertEqual(project.versions.count(), 1)
         self.assertRedirects(
-            self.client.post(edit_url, {**self.data, "scope": "All campuses"}), "/projects/"
+            self.client.post(edit_url, {**self.data, "scope": "All campuses"}), detail_url
         )
         self.assertEqual(project.versions.count(), 2)
         first.refresh_from_db()
@@ -90,7 +92,63 @@ class ProposalFormTest(TestCase):
         )
         self.client.force_login(owner)
         self.assertRedirects(
-            self.client.post(f"/projects/{archived.pk}/edit/", self.data), "/projects/"
+            self.client.post(f"/projects/{archived.pk}/edit/", self.data),
+            f"/projects/{archived.pk}/",
         )
         self.assertEqual(archived.versions.count(), 1)
         self.assertEqual(project.versions.count(), 1)
+
+
+class ProjectDetailTest(TestCase):
+    def test_detail_shows_versions_changes_and_is_private(self):
+        owner = get_user_model().objects.create_user("owner")
+        other = get_user_model().objects.create_user("other")
+        project = make_project(owner, "First title", scope="Main campus")
+        ProjectVersion.objects.create(
+            project=project, version_number=2, title="Second title", scope="Main campus",
+            features="<b>Search</b>",
+        )
+        url = f"/projects/{project.pk}/"
+        self.assertRedirects(self.client.get(url), f"/login/?next={url}")
+        self.client.force_login(other)
+        self.assertEqual(self.client.get(url).status_code, 404)
+        self.client.force_login(owner)
+        response = self.client.get(url)
+        self.assertContains(response, "Second title")
+        self.assertContains(response, "Changed: Title, Key features")
+        self.assertContains(response, "&lt;b&gt;Search&lt;/b&gt;")
+        self.assertNotContains(response, "earlier version")
+        self.assertIn("Problem statement", response.context["missing"])
+        older = self.client.get(url + "?version=1")
+        self.assertContains(older, "earlier version")
+        self.assertEqual(older.context["selected"].title, "First title")
+        self.assertEqual(self.client.get(url + "?version=99").context["selected"].version_number, 2)
+
+    def test_status_and_visibility_actions(self):
+        owner = get_user_model().objects.create_user("owner")
+        other = get_user_model().objects.create_user("other")
+        project = make_project(owner, "Idea")
+        url = f"/projects/{project.pk}/update/"
+        self.assertEqual(self.client.get(url).status_code, 302)
+        self.client.force_login(other)
+        self.assertEqual(self.client.post(url, {"action": "archive"}).status_code, 404)
+        self.client.force_login(owner)
+        self.assertEqual(self.client.get(url).status_code, 405)
+
+        def act(action):
+            self.assertRedirects(self.client.post(url, {"action": action}), f"/projects/{project.pk}/")
+            project.refresh_from_db()
+            return project.status, project.is_public
+
+        self.assertEqual(act("submit"), ("draft", False))
+        version = project.versions.get()
+        version.problem_statement = "Rooms are hard to find."
+        version.save()
+        self.assertEqual(act("submit"), ("submitted", False))
+        self.assertEqual(act("publish"), ("submitted", True))
+        self.assertEqual(act("bogus"), ("submitted", True))
+        self.assertEqual(act("archive"), ("archived", False))
+        self.assertEqual(act("publish"), ("archived", False))
+        self.assertEqual(act("draft"), ("draft", False))
+        self.assertEqual(act("publish"), ("draft", True))
+        self.assertEqual(act("unpublish"), ("draft", False))

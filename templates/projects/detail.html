@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ selected.title }}{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/projects/projects.css' %}">{% endblock %}
+{% block content %}
+<p class="breadcrumb"><a href="{% url 'projects:list' %}">Projects</a> <span aria-hidden="true">/</span> {{ latest.title }}</p>
+<header class="page-heading projects-heading">
+    <div>
+        <span class="eyebrow">{{ selected.category|default:"Uncategorized" }} · Version {{ selected.version_number }} of {{ latest.version_number }}</span>
+        <h1>{{ selected.title }}</h1>
+        <p class="detail-flags">
+            <span class="status-pill status-{{ project.status }}">{{ project.get_status_display }}</span>
+            <span class="muted small">{% if project.is_public %}Public{% else %}Private{% endif %} · Saved {{ selected.created_at|date:"M j, Y · g:i A" }}</span>
+        </p>
+    </div>
+    {% if project.status != "archived" %}<a class="button" href="{% url 'projects:edit' project.pk %}">Edit proposal</a>{% endif %}
+</header>
+{% if selected.pk != latest.pk %}
+<p class="notice">You are viewing an earlier version. <a href="{% url 'projects:detail' project.pk %}">Back to version {{ latest.version_number }}</a></p>
+{% endif %}
+<div class="detail-grid">
+    <section class="panel" aria-label="Proposal sections">
+        {% for section in sections %}
+        <div class="proposal-section">
+            <h2>{{ section.label }}</h2>
+            {% if section.text %}{{ section.text|linebreaks }}{% else %}<p class="muted small">Not written yet.</p>{% endif %}
+        </div>
+        {% endfor %}
+    </section>
+    <aside class="detail-aside">
+        <section class="panel" aria-labelledby="actions-heading">
+            <h2 id="actions-heading">Status</h2>
+            {% if missing and project.status != "archived" %}
+            <p class="small muted">{{ missing|length }} section{{ missing|length|pluralize }} still empty: {{ missing|join:", " }}.</p>
+            {% endif %}
+            <form method="post" action="{% url 'projects:update' project.pk %}" class="action-list">
+                {% csrf_token %}
+                {% if project.status == "draft" %}
+                <button class="button" name="action" value="submit">Submit project</button>
+                {% elif project.status == "submitted" %}
+                <button class="button secondary" name="action" value="draft">Return to draft</button>
+                {% else %}
+                <button class="button" name="action" value="draft">Restore as draft</button>
+                {% endif %}
+                {% if project.status != "archived" %}
+                {% if project.is_public %}
+                <button class="button secondary" name="action" value="unpublish">Make private</button>
+                {% else %}
+                <button class="button secondary" name="action" value="publish">Make public</button>
+                {% endif %}
+                <button class="button secondary" name="action" value="archive" data-confirm="Archive this project? It will become private and read-only.">Archive</button>
+                {% endif %}
+            </form>
+        </section>
+        <section class="panel" aria-labelledby="history-heading">
+            <h2 id="history-heading">Version history</h2>
+            <ol class="version-list">
+                {% for item in history %}
+                <li {% if item.version.pk == selected.pk %}class="current"{% endif %}>
+                    <a href="{% url 'projects:detail' project.pk %}?version={{ item.version.version_number }}" {% if item.version.pk == selected.pk %}aria-current="true"{% endif %}>Version {{ item.version.version_number }}</a>
+                    <span class="muted small">{{ item.version.created_at|date:"M j, Y · g:i A" }}</span>
+                    <span class="small">{% if item.changed %}Changed: {{ item.changed|join:", " }}{% elif item.version.version_number == 1 %}First saved version{% else %}No section changes{% endif %}</span>
+                </li>
+                {% endfor %}
+            </ol>
+        </section>
+    </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/projects/projects.js' %}" defer></script>{% endblock %}

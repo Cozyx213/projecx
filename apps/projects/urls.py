@@ -7,5 +7,7 @@ app_name = "projects"
 urlpatterns = [
     path("", views.project_list, name="list"),
     path("new/", views.project_form, name="new"),
+    path("<int:pk>/", views.project_detail, name="detail"),
+    path("<int:pk>/update/", views.project_update, name="update"),
     path("<int:pk>/edit/", views.project_form, name="edit"),
 ]

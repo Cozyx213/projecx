@@ -22,3 +22,19 @@
 .empty-state p { max-width: 420px; margin: 0 auto 24px; }
 .proposal-panel { max-width: 780px; }
 @media (max-width: 680px) { .projects-heading { display: block; } .projects-heading .button { margin-top: 18px; } .project-list { grid-template-columns: 1fr; } .project-search { flex-basis: 100%; } }
+.breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 18px; overflow-wrap: anywhere; }
+.detail-flags { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.detail-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.proposal-section + .proposal-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+.proposal-section h2 { font-size: 1.05rem; }
+.proposal-section p { overflow-wrap: anywhere; }
+.proposal-section p:last-child { margin-bottom: 0; }
+.detail-aside { display: grid; gap: 24px; }
+.detail-aside h2 { font-size: 17px; }
+.action-list { display: grid; gap: 10px; }
+.version-list { list-style: none; margin: 0; padding: 0; }
+.version-list li { display: grid; gap: 2px; padding: 14px 0 14px 14px; border-top: 1px solid var(--line); border-left: 3px solid transparent; }
+.version-list li.current { border-left-color: var(--green); }
+.version-list li:last-child { padding-bottom: 0; }
+.version-list a { font-weight: 650; font-size: 14px; }
+@media (max-width: 900px) { .detail-grid { grid-template-columns: 1fr; } }

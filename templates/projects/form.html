@@ -14,7 +14,7 @@
         {{ form.as_p }}
         <div class="form-actions">
             <button class="button" type="submit">{% if project %}Save new version{% else %}Create project{% endif %}</button>
-            <a href="{% url 'projects:list' %}">Cancel</a>
+            <a href="{% if project %}{% url 'projects:detail' project.pk %}{% else %}{% url 'projects:list' %}{% endif %}">Cancel</a>
             <span class="muted small" id="proposal-progress" hidden></span>
         </div>
     </form>

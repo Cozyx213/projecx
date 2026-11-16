@@ -32,7 +32,7 @@
             <span class="status-pill status-{{ row.project.status }}">{{ row.project.get_status_display }}</span>
             <span class="muted small">{% if row.project.is_public %}Public{% else %}Private{% endif %}</span>
         </div>
-        <h2><a href="{% url 'projects:edit' row.project.pk %}">{{ row.latest.title }}</a></h2>
+        <h2><a href="{% url 'projects:detail' row.project.pk %}">{{ row.latest.title }}</a></h2>
         <p class="muted">{{ row.latest.problem_statement|default:"No problem statement yet."|truncatechars:170 }}</p>
         <dl class="project-meta">
             <div><dt>Category</dt><dd>{{ row.latest.category|default:"Uncategorized" }}</dd></div>
