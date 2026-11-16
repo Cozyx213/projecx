@@ -40,6 +40,7 @@
         {% endif %}
         <section class="panel workspace-links" aria-labelledby="workspace-heading">
             <h2 id="workspace-heading">Make it yours</h2>
+            <a href="{% url 'projects:list' %}"><span><strong>All projects</strong><small>Fill in the full proposal and review versions</small></span><span aria-hidden="true">↗</span></a>
             <a href="{% url 'profile:profile' %}"><span><strong>Your profile</strong><small>Add your name and interests</small></span><span aria-hidden="true">↗</span></a>
             <a href="{% url 'user_settings:settings' %}"><span><strong>Workspace settings</strong><small>Choose your display preferences</small></span><span aria-hidden="true">↗</span></a>
         </section>

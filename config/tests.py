@@ -6,7 +6,7 @@ from django.test import Client, SimpleTestCase, TestCase
 
 class StaticFilesTest(SimpleTestCase):
     def test_each_feature_owns_real_templates_and_assets(self):
-        pages = {"login": "login", "register": "register", "home": "home", "profile": "profile", "user_settings": "settings"}
+        pages = {"login": "login", "register": "register", "home": "home", "projects": "projects", "profile": "profile", "user_settings": "settings"}
         for feature, page in pages.items():
             with self.subTest(feature=feature):
                 self.assertTrue((settings.BASE_DIR / "templates" / feature / f"{page}.html").is_file())
@@ -22,11 +22,11 @@ class StaticFilesTest(SimpleTestCase):
 class FormSecurityTest(TestCase):
     def test_post_requires_csrf_and_private_screens_require_login(self):
         user = get_user_model().objects.create_user("owner")
-        for path in ("/", "/profile/", "/settings/"):
+        for path in ("/", "/projects/new/", "/profile/", "/settings/"):
             self.assertEqual(self.client.post(path, {}).status_code, 302)
         client = Client(enforce_csrf_checks=True)
         for path in ("/login/", "/register/"):
             self.assertEqual(client.post(path, {}).status_code, 403)
         client.force_login(user)
-        for path in ("/", "/profile/", "/settings/", "/logout/"):
+        for path in ("/", "/projects/new/", "/profile/", "/settings/", "/logout/"):
             self.assertEqual(client.post(path, {}).status_code, 403)

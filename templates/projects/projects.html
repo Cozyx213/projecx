@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Projects{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/projects/projects.css' %}">{% endblock %}
+{% block content %}
+<header class="page-heading projects-heading">
+    <div>
+        <span class="eyebrow">Your ideas</span>
+        <h1>Projects</h1>
+        <p class="muted">Every proposal you have started, with its latest saved version.</p>
+    </div>
+    <a class="button" href="{% url 'projects:new' %}">New project</a>
+</header>
+<div class="projects-toolbar">
+    <nav class="filter-tabs" aria-label="Filter projects by status">
+        {% for filter in filters %}
+        <a href="{% url 'projects:list' %}{% if filter.value %}?status={{ filter.value }}{% endif %}" {% if filter.value == active_status %}aria-current="page"{% endif %}>{{ filter.label }} <span class="count">{{ filter.count }}</span></a>
+        {% endfor %}
+    </nav>
+    {% if rows %}
+    <label class="project-search" for="project-search" hidden>
+        <span class="visually-hidden">Search projects</span>
+        <input type="search" id="project-search" placeholder="Search by title or category">
+    </label>
+    {% endif %}
+</div>
+{% if rows %}
+<ul class="project-list" id="project-list">
+    {% for row in rows %}
+    <li class="panel project-card" data-search="{{ row.latest.title|lower }} {{ row.latest.category|default:''|lower }}">
+        <div class="project-card-top">
+            <span class="status-pill status-{{ row.project.status }}">{{ row.project.get_status_display }}</span>
+            <span class="muted small">{% if row.project.is_public %}Public{% else %}Private{% endif %}</span>
+        </div>
+        <h2><a href="{% url 'projects:edit' row.project.pk %}">{{ row.latest.title }}</a></h2>
+        <p class="muted">{{ row.latest.problem_statement|default:"No problem statement yet."|truncatechars:170 }}</p>
+        <dl class="project-meta">
+            <div><dt>Category</dt><dd>{{ row.latest.category|default:"Uncategorized" }}</dd></div>
+            <div><dt>Versions</dt><dd>{{ row.project.version_count }}</dd></div>
+            <div><dt>Last saved</dt><dd>{{ row.project.last_saved|date:"M j, Y · g:i A" }}</dd></div>
+        </dl>
+    </li>
+    {% endfor %}
+</ul>
+<p class="muted" id="no-results" hidden>No projects match your search.</p>
+{% else %}
+<section class="panel empty-state">
+    <img src="{% static 'images/projects/folders.svg' %}" width="220" height="140" alt="An empty stack of project folders">
+    <h2>{% if active_status %}No {{ active_status }} projects{% else %}No projects yet{% endif %}</h2>
+    <p class="muted">Start a proposal with a title and a problem. You can fill in the other sections later.</p>
+    <a class="button" href="{% url 'projects:new' %}">Start a project</a>
+</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/projects/projects.js' %}" defer></script>{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if project %}Edit project{% else %}New project{% endif %}{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/projects/projects.css' %}">{% endblock %}
+{% block content %}
+<header class="page-heading">
+    <span class="eyebrow">{% if project %}Version {{ latest.version_number }} is your latest{% else %}A new idea{% endif %}</span>
+    <h1>{% if project %}Edit proposal{% else %}New project{% endif %}</h1>
+    <p class="muted">{% if project %}Saving creates version {{ latest.version_number|add:1 }}. Earlier versions are kept.{% else %}Only the title is required. Fill in the sections you know now.{% endif %}</p>
+</header>
+<section class="panel proposal-panel" aria-label="Project proposal">
+    <form method="post" id="proposal-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button class="button" type="submit">{% if project %}Save new version{% else %}Create project{% endif %}</button>
+            <a href="{% url 'projects:list' %}">Cancel</a>
+            <span class="muted small" id="proposal-progress" hidden></span>
+        </div>
+    </form>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/projects/projects.js' %}" defer></script>{% endblock %}
