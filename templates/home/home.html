@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/home/home.css' %}">{% endblock %}
+{% block content %}
+<header class="page-heading home-heading">
+    <div>
+        <span class="eyebrow">Your workspace</span>
+        <h1>Welcome, {{ user.username }}!</h1>
+        <p class="muted">Give your next project a place to take shape.</p>
+    </div>
+    <span class="date-label">{% now "l, F j" %}</span>
+</header>
+<div class="workspace-grid">
+    <section class="panel draft-panel" aria-labelledby="draft-heading">
+        <div class="section-heading">
+            <div><span class="eyebrow">Start with the essentials</span><h2 id="draft-heading">Your project draft</h2></div>
+            <span class="status-label">{% if draft %}Draft saved{% else %}New idea{% endif %}</span>
+        </div>
+        <p class="muted">A name, a problem, and the people you want to help. You can refine these as you go.</p>
+        <form method="post" id="draft-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p class="character-count" id="problem-count" hidden></p>
+            <div class="form-actions">
+                <button class="button" type="submit">Save draft</button>
+                <span class="muted small">{% if draft %}Last saved {{ draft.created_at|date:"M j, Y · g:i A" }}{% else %}Only you can see your draft.{% endif %}</span>
+            </div>
+        </form>
+    </section>
+    <aside class="workspace-aside">
+        {% if preferences.show_home_tips %}
+        <section class="prompt-panel" aria-labelledby="prompt-heading" id="home-tips">
+            <img src="{% static 'images/home/project-path.svg' %}" width="300" height="160" alt="A path from noticing a problem to shaping an idea">
+            <span class="eyebrow">A starting point</span>
+            <h2 id="prompt-heading">Notice something<br>worth fixing.</h2>
+            <p>Think about a task at school that takes too long, a resource that is hard to find, or a process that could be clearer.</p>
+            <p class="small">Keep the problem specific. A small, useful project is a good place to begin.</p>
+        </section>
+        {% endif %}
+        <section class="panel workspace-links" aria-labelledby="workspace-heading">
+            <h2 id="workspace-heading">Make it yours</h2>
+            <a href="{% url 'profile:profile' %}"><span><strong>Your profile</strong><small>Add your name and interests</small></span><span aria-hidden="true">↗</span></a>
+            <a href="{% url 'user_settings:settings' %}"><span><strong>Workspace settings</strong><small>Choose your display preferences</small></span><span aria-hidden="true">↗</span></a>
+        </section>
+    </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/home/home.js' %}" defer></script>{% endblock %}

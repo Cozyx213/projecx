@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Settings{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/user_settings/settings.css' %}">{% endblock %}
+{% block content %}
+<header class="page-heading">
+    <span class="eyebrow">Your workspace, your way</span>
+    <h1>Settings</h1>
+    <p class="muted">Set up a space that works for you.</p>
+</header>
+<section class="panel settings-panel" aria-labelledby="settings-heading">
+    <div class="settings-heading">
+        <img src="{% static 'images/user_settings/preferences.svg' %}" width="56" height="56" alt="">
+        <div><h2 id="settings-heading">Display preferences</h2><p class="muted">These choices are saved to your account.</p></div>
+    </div>
+    <form method="post" id="settings-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <div class="setting-row">
+            <div><label for="{{ field.id_for_label }}">{{ field.label }}</label><p class="muted small" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{{ field.errors }}</div>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <p class="small muted" id="settings-preview" role="status" hidden>Preview your changes here, then save to keep them.</p>
+        <div class="form-actions"><button class="button" type="submit">Save settings</button><a href="{% url 'home:home' %}">Back to Home</a></div>
+    </form>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/user_settings/settings.js' %}" defer></script>{% endblock %}

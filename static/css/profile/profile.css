@@ -1,0 +1,10 @@
+.profile-layout { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 28px; max-width: 940px; align-items: start; }
+.profile-summary img { display: block; margin-bottom: 24px; }
+.profile-summary h2 { margin-bottom: 4px; }
+.profile-summary p { overflow-wrap: anywhere; }
+.profile-summary dl { border-top: 1px solid var(--line); padding-top: 20px; margin: 24px 0; font-size: 13px; }
+.profile-summary dt { color: var(--muted); }
+.profile-summary dd { margin: 4px 0 0; }
+.profile-summary p:last-child { margin-bottom: 0; }
+.profile-layout form { margin-top: 24px; }
+@media (max-width: 680px) { .profile-layout { grid-template-columns: 1fr; } }

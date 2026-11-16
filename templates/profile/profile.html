@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/profile/profile.css' %}">{% endblock %}
+{% block content %}
+<header class="page-heading">
+    <span class="eyebrow">Your account</span>
+    <h1>Profile</h1>
+    <p class="muted">A little about the person behind the project.</p>
+</header>
+<div class="profile-layout">
+    <aside class="panel profile-summary">
+        <img src="{% static 'images/profile/avatar.svg' %}" width="96" height="96" alt="Default profile avatar">
+        <h2>{{ profile.full_name|default:user.username }}</h2>
+        <p class="muted">@{{ user.username }}</p>
+        <dl><dt>Member since</dt><dd>{{ user.date_joined|date:"F j, Y" }}</dd></dl>
+        <p class="small muted">Your profile is part of your private workspace.</p>
+    </aside>
+    <section class="panel" aria-labelledby="profile-heading">
+        <h2 id="profile-heading">Edit your profile</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p class="character-count" id="bio-count" hidden></p>
+            <button class="button" type="submit">Save profile</button>
+        </form>
+    </section>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/profile/profile.js' %}" defer></script>{% endblock %}

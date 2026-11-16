@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="{% if preferences.dark_mode %}dark{% else %}light{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %} | ProjectX</title>
+    <link rel="stylesheet" href="{% static 'css/shared/base.css' %}">
+    {% block styles %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="{% url 'home:home' %}" aria-label="ProjectX home"><span class="brand-mark" aria-hidden="true">X</span>ProjectX</a>
+            {% if user.is_authenticated %}
+            <nav aria-label="Main navigation">
+                <a href="{% url 'home:home' %}" {% if request.resolver_match.app_name == 'home' %}aria-current="page"{% endif %}>Home</a>
+                <a href="{% url 'profile:profile' %}" {% if request.resolver_match.app_name == 'profile' %}aria-current="page"{% endif %}>Profile</a>
+                <a href="{% url 'user_settings:settings' %}" {% if request.resolver_match.app_name == 'user_settings' %}aria-current="page"{% endif %}>Settings</a>
+            </nav>
+            <form class="logout" method="post" action="{% url 'login:logout' %}">
+                {% csrf_token %}
+                <button class="button secondary" type="submit">Log out</button>
+            </form>
+            {% else %}
+            <span class="header-note">A place for your next idea.</span>
+            {% endif %}
+        </div>
+    </header>
+    <main id="main" class="page" tabindex="-1">
+        {% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">ProjectX <span aria-hidden="true">/</span> From a real problem to a practical idea.</footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

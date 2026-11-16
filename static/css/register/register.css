@@ -1,0 +1,6 @@
+.register-card { max-width: 540px; margin: 0 auto; padding: 36px; }
+.register-card h1 { font-size: 2rem; }
+.register-card .helptext ul { margin: 8px 0 0; padding-left: 18px; }
+.register-card form > ul { color: var(--muted); }
+.register-card form .errorlist { color: var(--error); }
+@media (max-width: 680px) { .register-card { padding: 24px; } }

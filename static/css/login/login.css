@@ -1,0 +1,12 @@
+.auth-layout { display: grid; grid-template-columns: 1fr 440px; gap: 80px; align-items: center; padding: 36px 0; }
+.login-intro h1 { font-size: clamp(2.3rem, 4vw, 3.5rem); }
+.login-intro p { max-width: 380px; color: var(--muted); }
+.login-intro img { display: block; margin-top: 32px; }
+.auth-card { padding: 36px; }
+@media (max-width: 900px) { .auth-layout { gap: 32px; grid-template-columns: 1fr 1fr; } }
+@media (max-width: 680px) {
+    .auth-layout { grid-template-columns: 1fr; padding: 0; gap: 24px; }
+    .login-intro img { display: none; }
+    .login-intro h1 { font-size: 2rem; }
+    .auth-card { padding: 24px; }
+}

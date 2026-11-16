@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Register{% endblock %}
+{% block body_class %}register-page{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/register/register.css' %}">{% endblock %}
+{% block content %}
+<section class="panel register-card" aria-labelledby="register-heading">
+    <img class="feature-icon" src="{% static 'images/register/notebook.svg' %}" width="56" height="56" alt="">
+    <span class="eyebrow">Make room for your ideas</span>
+    <h1 id="register-heading">Create an account</h1>
+    <p class="muted">Start your project journey with ProjectX.</p>
+    <form method="post" id="register-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="text-button" type="button" id="show-passwords" aria-controls="id_password1 id_password2" aria-pressed="false" hidden>Show passwords</button>
+        <button class="button auth-submit" type="submit">Register</button>
+    </form>
+    <p class="auth-switch">Already registered? <a href="{% url 'login:login' %}">Back to login</a></p>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/register/register.js' %}" defer></script>{% endblock %}

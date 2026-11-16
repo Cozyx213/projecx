@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Login{% endblock %}
+{% block body_class %}login-page{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/login/login.css' %}">{% endblock %}
+{% block content %}
+<div class="auth-layout">
+    <section class="login-intro">
+        <span class="eyebrow">Your project starts here</span>
+        <h1>Good ideas start<br>with a real problem.</h1>
+        <p>Keep a place for the problems you notice and the projects you want to build.</p>
+        <img src="{% static 'images/login/idea-notes.svg' %}" width="360" height="240" alt="A notebook linking a problem to a project idea">
+    </section>
+    <section class="panel auth-card" aria-labelledby="login-heading">
+        <span class="eyebrow">Welcome back</span>
+        <h2 id="login-heading">Log in to ProjectX</h2>
+        <p class="muted">Pick up where you left off.</p>
+        {% if request.GET.registered %}<p class="notice" role="status">Account created. You can now log in.</p>{% endif %}
+        <form method="post" id="login-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="hidden" name="next" value="{{ next }}">
+            <button class="text-button" type="button" id="show-password" aria-controls="id_password" aria-pressed="false" hidden>Show password</button>
+            <button class="button auth-submit" type="submit">Log in</button>
+        </form>
+        <p class="auth-switch">New here? <a href="{% url 'register:register' %}">Create an account</a></p>
+    </section>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/login/login.js' %}" defer></script>{% endblock %}
