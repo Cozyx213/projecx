@@ -10,3 +10,8 @@ __pycache__/
 !.env.example
 staticfiles/
 artifacts/
+
+# Session evidence generated for submission
+BASELINE_COMMIT.txt
+GIT_*.txt
+GIT_*.patch
