@@ -78,7 +78,8 @@ form ul { padding-left: 20px; }
 @media (max-width: 680px) {
     .header-inner { padding: 16px 20px; gap: 18px; flex-wrap: wrap; }
     .header-inner nav { order: 3; width: 100%; }
-    nav a { flex: 1; text-align: center; }
+    nav { flex-wrap: wrap; gap: 4px; }
+    nav a { flex: 1; text-align: center; padding: 8px 10px; }
     .header-note { display: none; }
     .page { padding: 30px 20px 42px; }
     .panel { padding: 22px; }
