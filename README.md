@@ -1,6 +1,7 @@
 # ProjectX — Django vertical slicing + Supabase
 
-A student project workspace with Login, Register, Home, Profile, and Settings.
+A student project workspace with Login, Register, Home, Projects, Similarity
+Checks, Profile, and Settings.
 The layout follows `CSIT327_Python_Django_Vertical_Slicing_and_Supabase_Guide.pdf`.
 Django handles authentication and migrations; Supabase PostgreSQL stores the data.
 
@@ -15,6 +16,8 @@ apps/
   login/             # Django login/logout views and routes
   register/          # Account creation and validation
   home/              # ERD models, project draft form, views, migrations, tests
+  projects/          # Project list, full proposal form, version history, status actions
+  similarity/        # Similarity engine, check runs, results, and check history
   profile/           # Full name and bio, form, view, migration, tests
   user_settings/     # Display preferences, form, view, migration, tests
 templates/
@@ -22,6 +25,8 @@ templates/
   login/login.html
   register/register.html
   home/home.html
+  projects/          # projects.html, form.html, detail.html
+  similarity/        # checks.html, detail.html
   profile/profile.html
   user_settings/settings.html
 static/
@@ -91,12 +96,28 @@ python manage.py createsuperuser
 3. On **Profile**, save a full name and bio. Reload to confirm the values persist.
 4. On **Settings**, preview and save dark mode. It applies across the workspace.
    Turn project prompts off, save, and check that the prompt panel disappears on Home.
-5. Log out and verify private pages redirect to Login. Another account has its own
+5. On **Projects**, create a project with the full proposal form. Each save adds a
+   version; the project page lists every version and the sections that changed.
+   Submit, publish, archive, and restore the project from its Status panel.
+6. On **Checks**, run a similarity check. The latest version is compared with your
+   other projects and with projects other accounts made public. Results show a
+   score, the reason for each match, and recommendations.
+7. Log out and verify private pages redirect to Login. Another account has its own
    draft, profile, and preferences.
 
 Password visibility controls, live character counts, and the theme preview use
 the feature JavaScript files. Forms also work without JavaScript. The SVG images
 are local assets. Profile uses a default avatar; image uploads are not implemented.
+
+## How similarity is scored
+
+`apps/similarity/engine.py` is plain Python with no extra dependencies. It removes
+common words, reduces words to a rough root, and measures cosine similarity of
+word counts. The score is the average of the whole-proposal similarity and a
+weighted average of the sections both proposals filled in; the problem statement
+and proposed solution weigh the most. Matches below 10% are dropped and the five
+highest are stored. Scores of 70% and above are labelled high, 40% and above
+moderate. Private and archived projects of other accounts are never compared.
 
 ## Tests and database verification
 
@@ -135,9 +156,9 @@ Inspect these tables:
 
 Match `projects.user_id` to `auth_user.id` and `project_versions.project_id` to
 `projects.id`. Refresh after saving a form. Migrations create tables; submitting
-the forms creates profile, preferences, project, and version rows. Similarity
-and recommendation models are ready for the laboratory; their algorithms and UI
-are not implemented by this schema change. The ERD laboratory requires evidence
+the forms creates profile, preferences, project, and version rows. Running a
+check on the Checks page creates the `similarity_checks`, `similarity_matches`,
+and `recommendations` rows. The ERD laboratory requires evidence
 of tables and relationships; the earlier application demonstration also required
 saved form data.
 
