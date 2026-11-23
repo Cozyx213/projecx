@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Settings{% endblock %}
-{% block styles %}<link rel="stylesheet" href="{% static 'css/user_settings/settings.css' %}">{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/user_settings/settings.css' %}?v=2">{% endblock %}
 {% block content %}
 <header class="page-heading">
     <span class="eyebrow">Your workspace, your way</span>
@@ -27,4 +27,4 @@
     </form>
 </section>
 {% endblock %}
-{% block scripts %}<script src="{% static 'js/user_settings/settings.js' %}" defer></script>{% endblock %}
+{% block scripts %}<script src="{% static 'js/user_settings/settings.js' %}?v=2" defer></script>{% endblock %}
