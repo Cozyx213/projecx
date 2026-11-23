@@ -129,7 +129,7 @@ def _clamp_score(value):
 
 def analyze_similarity(proposal, candidates, max_matches=5):
     """Score semantic overlap, explain matches, and generate recommendations via OpenAI."""
-    model = getattr(settings, "OPENAI_MODEL", "gpt-4o-mini")
+    model = getattr(settings, "OPENAI_MODEL", "gpt-6-luna")
     shortlist = rank_candidates(proposal, candidates, limit=max(max_matches + 3, MAX_CANDIDATES_FOR_LLM))
     allowed_ids = {candidate_id for candidate_id, _, _ in shortlist}
 
@@ -172,7 +172,6 @@ def analyze_similarity(proposal, candidates, max_matches=5):
         "chat/completions",
         {
             "model": model,
-            "temperature": 0.2,
             "response_format": {"type": "json_object"},
             "messages": [
                 {"role": "system", "content": system_prompt},

@@ -191,7 +191,7 @@ class SimilarityCheckViewTest(TestCase):
         self.assertEqual(row, check)
 
 
-@override_settings(OPENAI_API_KEY="sk-test-key", OPENAI_MODEL="gpt-4o-mini")
+@override_settings(OPENAI_API_KEY="sk-test-key", OPENAI_MODEL="gpt-6-luna")
 class OpenAISimilarityTest(TestCase):
     def setUp(self):
         users = get_user_model().objects

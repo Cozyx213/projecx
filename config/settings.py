@@ -104,7 +104,7 @@ LOGIN_REDIRECT_URL = "home:home"
 LOGOUT_REDIRECT_URL = "login:login"
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip() or "gpt-4o-mini"
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-6-luna").strip() or "gpt-6-luna"
 OPENAI_EMBEDDING_MODEL = (
     os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small").strip()
     or "text-embedding-3-small"

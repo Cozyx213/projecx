@@ -113,7 +113,7 @@ are local assets. Profile uses a default avatar; image uploads are not implement
 
 When `OPENAI_API_KEY` is configured in `.env`, `apps/similarity/llm.py` uses OpenAI
 text embeddings (`text-embedding-3-small`) to shortlist semantically related proposals
-and an OpenAI chat model (`gpt-4o-mini`) to score conceptual overlap (0–100%), write
+and an OpenAI chat model (`gpt-6-luna`) to score conceptual overlap (0–100%), write
 specific explanations for each match, and generate tailored recommendations.
 
 If `OPENAI_API_KEY` is unset or the API is unavailable, `apps/similarity/engine.py`
