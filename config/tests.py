@@ -22,11 +22,11 @@ class StaticFilesTest(SimpleTestCase):
 class FormSecurityTest(TestCase):
     def test_post_requires_csrf_and_private_screens_require_login(self):
         user = get_user_model().objects.create_user("owner")
-        for path in ("/", "/projects/new/", "/checks/run/1/", "/profile/", "/settings/"):
+        for path in ("/", "/projects/new/", "/checks/run/1/", "/profile/", "/settings/", "/settings/toggle-theme/"):
             self.assertEqual(self.client.post(path, {}).status_code, 302)
         client = Client(enforce_csrf_checks=True)
         for path in ("/login/", "/register/"):
             self.assertEqual(client.post(path, {}).status_code, 403)
         client.force_login(user)
-        for path in ("/", "/projects/new/", "/checks/run/1/", "/profile/", "/settings/", "/logout/"):
+        for path in ("/", "/projects/new/", "/checks/run/1/", "/profile/", "/settings/", "/settings/toggle-theme/", "/logout/"):
             self.assertEqual(client.post(path, {}).status_code, 403)

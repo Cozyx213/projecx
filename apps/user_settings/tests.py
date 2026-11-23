@@ -31,3 +31,28 @@ class UserSettingsTest(TestCase):
         saved.refresh_from_db()
         self.assertFalse(saved.dark_mode)
         self.assertTrue(saved.show_home_tips)
+
+    def test_header_toggle_persists_dark_mode_without_changing_other_preferences(self):
+        self.assertRedirects(self.client.post("/settings/toggle-theme/"), "/login/?next=/settings/toggle-theme/")
+        owner = get_user_model().objects.create_user("owner")
+        self.client.force_login(owner)
+        self.assertEqual(self.client.get("/settings/toggle-theme/").status_code, 405)
+
+        home = self.client.get("/")
+        self.assertContains(home, 'id="header-theme-toggle"')
+        self.assertContains(home, 'aria-pressed="false"')
+
+        response = self.client.post("/settings/toggle-theme/", {"next": "/projects/"})
+        self.assertRedirects(response, "/projects/")
+        saved = UserSettings.objects.get(user=owner)
+        self.assertTrue(saved.dark_mode)
+        self.assertTrue(saved.show_home_tips)
+        self.assertContains(self.client.get("/projects/"), 'data-theme="dark"')
+        self.assertContains(self.client.get("/projects/"), 'aria-pressed="true"')
+
+        # Unsafe external redirect targets fall back to Home.
+        response = self.client.post("/settings/toggle-theme/", {"next": "https://evil.example/phish"})
+        self.assertRedirects(response, "/")
+        saved.refresh_from_db()
+        self.assertFalse(saved.dark_mode)
+        self.assertTrue(saved.show_home_tips)

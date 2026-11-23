@@ -21,10 +21,26 @@
                 <a href="{% url 'profile:profile' %}" {% if request.resolver_match.app_name == 'profile' %}aria-current="page"{% endif %}>Profile</a>
                 <a href="{% url 'user_settings:settings' %}" {% if request.resolver_match.app_name == 'user_settings' %}aria-current="page"{% endif %}>Settings</a>
             </nav>
-            <form class="logout" method="post" action="{% url 'login:logout' %}">
-                {% csrf_token %}
-                <button class="button secondary" type="submit">Log out</button>
-            </form>
+            <div class="header-actions">
+                <form class="theme-form" method="post" action="{% url 'user_settings:toggle_theme' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button
+                        class="button secondary theme-toggle"
+                        id="header-theme-toggle"
+                        type="submit"
+                        aria-pressed="{% if preferences.dark_mode %}true{% else %}false{% endif %}"
+                        aria-label="{% if preferences.dark_mode %}Switch to light mode{% else %}Switch to dark mode{% endif %}"
+                    >
+                        <span class="theme-icon" aria-hidden="true">{% if preferences.dark_mode %}☀{% else %}☾{% endif %}</span>
+                        <span class="theme-label">{% if preferences.dark_mode %}Light mode{% else %}Dark mode{% endif %}</span>
+                    </button>
+                </form>
+                <form class="logout" method="post" action="{% url 'login:logout' %}">
+                    {% csrf_token %}
+                    <button class="button secondary" type="submit">Log out</button>
+                </form>
+            </div>
             {% else %}
             <span class="header-note">A place for your next idea.</span>
             {% endif %}

@@ -39,8 +39,11 @@ p { margin: 0 0 20px; }
 nav { display: flex; align-items: center; gap: 8px; }
 nav a { text-decoration: none; color: var(--muted); padding: 8px 14px; border-radius: 6px; font-size: 14px; font-weight: 600; }
 nav a[aria-current="page"], nav a:hover { color: var(--green); background: var(--tint); }
-.logout, .header-note { margin-left: auto; }
-.header-note { color: var(--muted); font-size: 13px; }
+.header-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.header-note { margin-left: auto; color: var(--muted); font-size: 13px; }
+.theme-form, .logout { margin: 0; }
+.theme-toggle { gap: 7px; padding: 10px 14px; white-space: nowrap; }
+.theme-icon { font-size: 15px; line-height: 1; }
 .page { max-width: 1184px; margin: 0 auto; padding: 48px 32px 64px; min-height: calc(100vh - 166px); }
 .page-heading { margin-bottom: 32px; }
 .page-heading p { margin-bottom: 0; }
@@ -59,6 +62,7 @@ form ul { padding-left: 20px; }
 .button { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; padding: 10px 20px; background: var(--green); color: var(--surface); border: 1px solid var(--green); border-radius: 6px; font-size: 14px; font-weight: 650; text-decoration: none; }
 .button:hover { filter: brightness(.9); }
 .button.secondary { background: transparent; color: var(--green); border-color: var(--line); }
+.button.secondary:hover { background: var(--tint); border-color: var(--green); filter: none; }
 .text-button { border: 0; background: transparent; color: var(--green); padding: 4px 0; margin: -6px 0 18px; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
 .form-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .form-actions a { font-size: 14px; }
@@ -80,8 +84,13 @@ form ul { padding-left: 20px; }
     .header-inner nav { order: 3; width: 100%; }
     nav { flex-wrap: wrap; gap: 4px; }
     nav a { flex: 1; text-align: center; padding: 8px 10px; }
+    .header-actions { gap: 8px; }
+    .theme-toggle { padding: 8px 12px; }
     .header-note { display: none; }
     .page { padding: 30px 20px 42px; }
     .panel { padding: 22px; }
     .site-footer { margin: 0 20px; padding: 20px 0; }
+}
+@media (max-width: 480px) {
+    .theme-label { display: none; }
 }
