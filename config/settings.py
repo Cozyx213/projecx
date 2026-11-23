@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "apps.register.apps.RegisterConfig",
     "apps.home.apps.HomeConfig",
     "apps.projects.apps.ProjectsConfig",
+    "apps.explore.apps.ExploreConfig",
     "apps.similarity.apps.SimilarityConfig",
     "apps.profile.apps.ProfileConfig",
     "apps.user_settings.apps.UserSettingsConfig",

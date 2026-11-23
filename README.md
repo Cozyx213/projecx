@@ -17,7 +17,8 @@ apps/
   register/          # Account creation and validation
   home/              # ERD models, project draft form, views, migrations, tests
   projects/          # Project list, full proposal form, version history, status actions
-  similarity/        # Similarity engine, check runs, results, and check history
+  explore/           # Public project gallery with category filtering, search, and detail view
+  similarity/        # Similarity engine, OpenAI LLM analysis, check runs, results, and history
   profile/           # Full name and bio, form, view, migration, tests
   user_settings/     # Display preferences, form, view, migration, tests
 templates/

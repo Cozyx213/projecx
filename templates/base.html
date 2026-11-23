@@ -17,6 +17,7 @@
             <nav aria-label="Main navigation">
                 <a href="{% url 'home:home' %}" {% if request.resolver_match.app_name == 'home' %}aria-current="page"{% endif %}>Home</a>
                 <a href="{% url 'projects:list' %}" {% if request.resolver_match.app_name == 'projects' %}aria-current="page"{% endif %}>Projects</a>
+                <a href="{% url 'explore:list' %}" {% if request.resolver_match.app_name == 'explore' %}aria-current="page"{% endif %}>Explore</a>
                 <a href="{% url 'similarity:list' %}" {% if request.resolver_match.app_name == 'similarity' %}aria-current="page"{% endif %}>Checks</a>
                 <a href="{% url 'profile:profile' %}" {% if request.resolver_match.app_name == 'profile' %}aria-current="page"{% endif %}>Profile</a>
                 <a href="{% url 'user_settings:settings' %}" {% if request.resolver_match.app_name == 'user_settings' %}aria-current="page"{% endif %}>Settings</a>

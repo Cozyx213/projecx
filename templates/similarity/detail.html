@@ -27,7 +27,7 @@
             <li>
                 <div class="match-top">
                     <div>
-                        <h3>{% if item.own %}<a href="{% url 'projects:detail' item.project.pk %}">{{ item.match.matched_version.title }}</a>{% else %}{{ item.match.matched_version.title }}{% endif %}</h3>
+                        <h3>{% if item.own %}<a href="{% url 'projects:detail' item.project.pk %}">{{ item.match.matched_version.title }}</a>{% elif item.project.is_public and item.project.status != 'archived' %}<a href="{% url 'explore:detail' item.project.pk %}">{{ item.match.matched_version.title }}</a>{% else %}{{ item.match.matched_version.title }}{% endif %}</h3>
                         <span class="muted small">{% if item.own %}Your project{% else %}Public project by @{{ item.project.user.username }}{% endif %}{% if item.match.matched_version.category %} · {{ item.match.matched_version.category }}{% endif %}</span>
                     </div>
                     <span class="score-pill level-{{ item.level }}">{{ item.match.similarity_score|floatformat:0 }}%</span>

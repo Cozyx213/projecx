@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Explore public ideas{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/explore/explore.css' %}?v=1">{% endblock %}
+{% block content %}
+<header class="page-heading explore-heading">
+    <div>
+        <span class="eyebrow">Public gallery</span>
+        <h1>Explore ideas</h1>
+        <p class="muted">Browse proposals other students have shared publicly to find inspiration and avoid duplicate topics.</p>
+    </div>
+    <a class="button" href="{% url 'projects:new' %}">Start a project</a>
+</header>
+
+<div class="explore-toolbar">
+    <nav class="filter-tabs" aria-label="Filter public projects by category">
+        {% for cat in categories %}
+        <a href="{% url 'explore:list' %}{% if cat.value %}?category={{ cat.value|urlencode }}{% if query %}&q={{ query|urlencode }}{% endif %}{% elif query %}?q={{ query|urlencode }}{% endif %}" {% if cat.value|lower == active_category|lower %}aria-current="page"{% endif %}>{{ cat.label }} <span class="count">{{ cat.count }}</span></a>
+        {% endfor %}
+    </nav>
+    <form class="explore-search" method="get" action="{% url 'explore:list' %}" role="search">
+        {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}">{% endif %}
+        <label for="explore-search-input">
+            <span class="visually-hidden">Search public ideas</span>
+            <input type="search" id="explore-search-input" name="q" value="{{ query }}" placeholder="Search title, problem, category, or @author">
+        </label>
+        <button class="button secondary" type="submit">Search</button>
+    </form>
+</div>
+
+{% if rows %}
+<ul class="explore-grid" id="explore-list">
+    {% for row in rows %}
+    <li class="panel explore-card" data-search="{{ row.latest.title|lower }} {{ row.category|lower }} {{ row.latest.problem_statement|default:''|lower }} {{ row.project.user.username|lower }}">
+        <div class="explore-card-top">
+            <span class="category-pill">{{ row.category|default:"Uncategorized" }}</span>
+            <span class="author-badge{% if row.own %} is-own{% endif %}">{% if row.own %}Your project{% else %}@{{ row.project.user.username }}{% endif %}</span>
+        </div>
+        <h2><a href="{% url 'explore:detail' row.project.pk %}">{{ row.latest.title }}</a></h2>
+        <p class="muted">{{ row.latest.problem_statement|default:row.latest.description|default:"No summary provided yet."|truncatechars:180 }}</p>
+        <dl class="explore-meta">
+            <div><dt>Status</dt><dd>{{ row.project.get_status_display }}</dd></div>
+            <div><dt>Versions</dt><dd>{{ row.project.version_count }}</dd></div>
+            <div><dt>Updated</dt><dd>{{ row.project.last_saved|date:"M j, Y" }}</dd></div>
+        </dl>
+    </li>
+    {% endfor %}
+</ul>
+<p class="muted" id="explore-no-results" hidden>No public proposals match your filter.</p>
+{% else %}
+<section class="panel empty-state">
+    <img src="{% static 'images/explore/compass.svg' %}" width="180" height="120" alt="A compass pointing toward new project ideas">
+    {% if query or active_category %}
+    <h2>No matching public projects</h2>
+    <p class="muted">Try clearing your search or choosing another category to see all {{ total_public }} public proposal{{ total_public|pluralize }}.</p>
+    <a class="button secondary" href="{% url 'explore:list' %}">Show all public ideas</a>
+    {% else %}
+    <h2>No public projects yet</h2>
+    <p class="muted">Projects stay private by default. Open any project and click <strong>Make public</strong> to share it here and include it in cross-student similarity checks.</p>
+    <a class="button" href="{% url 'projects:list' %}">Go to your projects</a>
+    {% endif %}
+</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/explore/explore.js' %}?v=1" defer></script>{% endblock %}

@@ -6,7 +6,7 @@ from django.test import Client, SimpleTestCase, TestCase
 
 class StaticFilesTest(SimpleTestCase):
     def test_each_feature_owns_real_templates_and_assets(self):
-        pages = {"login": "login", "register": "register", "home": "home", "projects": "projects", "similarity": "checks", "profile": "profile", "user_settings": "settings"}
+        pages = {"login": "login", "register": "register", "home": "home", "projects": "projects", "explore": "explore", "similarity": "checks", "profile": "profile", "user_settings": "settings"}
         for feature, page in pages.items():
             with self.subTest(feature=feature):
                 self.assertTrue((settings.BASE_DIR / "templates" / feature / f"{page}.html").is_file())

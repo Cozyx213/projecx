@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ latest.title }} — Explore{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/explore/explore.css' %}?v=1">{% endblock %}
+{% block content %}
+<p class="breadcrumb"><a href="{% url 'explore:list' %}">Explore</a> <span aria-hidden="true">/</span> {{ latest.title }}</p>
+<header class="page-heading explore-heading">
+    <div>
+        <span class="eyebrow">{{ latest.category|default:"Uncategorized" }} · Public proposal</span>
+        <h1>{{ latest.title }}</h1>
+        <p class="detail-flags">
+            <span class="author-badge{% if own %} is-own{% endif %}">{% if own %}Your project (@{{ project.user.username }}){% else %}Shared by @{{ project.user.username }}{% endif %}</span>
+            <span class="muted small">{{ project.get_status_display }} · Version {{ latest.version_number }} of {{ version_count }} · Updated {{ latest.created_at|date:"M j, Y · g:i A" }}</span>
+        </p>
+    </div>
+    {% if own %}
+    <a class="button" href="{% url 'projects:detail' project.pk %}">Manage project</a>
+    {% else %}
+    <a class="button secondary" href="{% url 'explore:list' %}">Back to Explore</a>
+    {% endif %}
+</header>
+
+<div class="detail-grid">
+    <section class="panel" aria-label="Public proposal sections">
+        {% for section in sections %}
+        <div class="proposal-section">
+            <h2>{{ section.label }}</h2>
+            {% if section.text %}{{ section.text|linebreaks }}{% else %}<p class="muted small">Not written yet.</p>{% endif %}
+        </div>
+        {% endfor %}
+    </section>
+    <aside class="detail-aside">
+        <section class="panel" aria-labelledby="compare-heading">
+            <h2 id="compare-heading">Check originality</h2>
+            <p class="small muted">Working on a similar topic? Run an AI similarity check on your own proposal to see how closely your problem and solution overlap.</p>
+            <div class="action-list">
+                <a class="button" href="{% url 'similarity:list' %}">Run similarity check</a>
+                <a class="button secondary" href="{% url 'projects:new' %}">Start a new proposal</a>
+            </div>
+        </section>
+        <section class="panel" aria-labelledby="meta-heading">
+            <h2 id="meta-heading">Proposal overview</h2>
+            <dl class="overview-list">
+                <div><dt>Author</dt><dd>@{{ project.user.username }}</dd></div>
+                <div><dt>Category</dt><dd>{{ latest.category|default:"Uncategorized" }}</dd></div>
+                <div><dt>Status</dt><dd>{{ project.get_status_display }}</dd></div>
+                <div><dt>Revisions</dt><dd>{{ version_count }} saved version{{ version_count|pluralize }}</dd></div>
+            </dl>
+        </section>
+    </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/explore/explore.js' %}?v=1" defer></script>{% endblock %}
