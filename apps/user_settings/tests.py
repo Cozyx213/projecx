@@ -56,3 +56,18 @@ class UserSettingsTest(TestCase):
         saved.refresh_from_db()
         self.assertFalse(saved.dark_mode)
         self.assertTrue(saved.show_home_tips)
+
+    def test_settings_auto_save_ajax_persists_across_pages(self):
+        owner = get_user_model().objects.create_user("owner")
+        self.client.force_login(owner)
+        response = self.client.post(
+            "/settings/",
+            {"dark_mode": "on", "show_home_tips": "on"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"ok": True, "dark_mode": True, "show_home_tips": True})
+        for page in ("/", "/projects/", "/projects/new/", "/checks/", "/profile/", "/settings/"):
+            page_resp = self.client.get(page)
+            self.assertContains(page_resp, 'data-theme="dark"')
+            self.assertNotContains(page_resp, "Settings saved.")

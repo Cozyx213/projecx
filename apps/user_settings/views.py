@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_http_methods, require_POST
@@ -17,7 +18,11 @@ def settings(request):
         instance=preferences or UserSettings(user=request.user),
     )
     if request.method == "POST" and form.is_valid():
-        form.save()
+        saved = form.save()
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse(
+                {"ok": True, "dark_mode": saved.dark_mode, "show_home_tips": saved.show_home_tips}
+            )
         messages.success(request, "Settings saved.")
         return redirect("user_settings:settings")
     return render(request, "user_settings/settings.html", {"form": form})
