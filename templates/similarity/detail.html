@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Check results{% endblock %}
-{% block styles %}<link rel="stylesheet" href="{% static 'css/similarity/checks.css' %}">{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/similarity/checks.css' %}?v=3">{% endblock %}
 {% block content %}
 <p class="breadcrumb"><a href="{% url 'similarity:list' %}">Similarity checks</a> <span aria-hidden="true">/</span> {{ version.title }}</p>
 <header class="page-heading result-heading">

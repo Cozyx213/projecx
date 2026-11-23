@@ -9,8 +9,8 @@
 .check-table tbody th span { display: block; font-weight: 400; }
 .score-pill { display: inline-block; min-width: 52px; text-align: center; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 16px; background: var(--line); color: var(--ink); }
 .level-high { --level: var(--error); }
-.level-moderate { --level: var(--focus); }
-.level-low, .level-none { --level: var(--green); }
+.level-moderate { --level: var(--gold); }
+.level-low, .level-none { --level: var(--low); }
 .score-pill.level-high, .score-pill.level-moderate, .score-pill.level-low { background: transparent; color: var(--level); border: 1px solid var(--level); }
 .empty-checks { text-align: center; padding: 24px 0 8px; }
 .empty-checks img { display: block; margin: 0 auto 16px; }

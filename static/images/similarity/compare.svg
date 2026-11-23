@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" role="img" aria-label="Two proposals compared">
-  <rect x="22" y="18" width="70" height="88" rx="6" fill="#ffffff" stroke="#285c49" stroke-width="2"/>
-  <rect x="108" y="18" width="70" height="88" rx="6" fill="#e6f3eb" stroke="#285c49" stroke-width="2"/>
-  <path d="M34 36h46M34 50h34M34 64h46M34 78h26" stroke="#536171" stroke-width="3" stroke-linecap="round"/>
-  <path d="M120 36h46M120 50h28M120 64h46M120 78h38" stroke="#536171" stroke-width="3" stroke-linecap="round"/>
-  <path d="M34 64h46M120 64h46" stroke="#b26a16" stroke-width="3" stroke-linecap="round"/>
-  <circle cx="100" cy="62" r="13" fill="#285c49"/>
-  <path d="M94 62h12M102 57l5 5-5 5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="22" y="18" width="70" height="88" rx="6" fill="#ffffff" stroke="#801323" stroke-width="2"/>
+  <rect x="108" y="18" width="70" height="88" rx="6" fill="#f8e9ec" stroke="#801323" stroke-width="2"/>
+  <path d="M34 36h46M34 50h34M34 64h46M34 78h26" stroke="#615054" stroke-width="3" stroke-linecap="round"/>
+  <path d="M120 36h46M120 50h28M120 64h46M120 78h38" stroke="#615054" stroke-width="3" stroke-linecap="round"/>
+  <path d="M34 64h46M120 64h46" stroke="#d49b1a" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="100" cy="62" r="13" fill="#801323"/>
+  <path d="M94 62h12M102 57l5 5-5 5" fill="none" stroke="#f2c14e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
