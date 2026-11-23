@@ -14,6 +14,7 @@
 .score-pill.level-high, .score-pill.level-moderate, .score-pill.level-low { background: transparent; color: var(--level); border: 1px solid var(--level); }
 .empty-checks { text-align: center; padding: 24px 0 8px; }
 .empty-checks img { display: block; margin: 0 auto 16px; }
+.run-group { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; margin: 18px 0 4px; }
 .run-list { list-style: none; margin: 0; padding: 0; }
 .run-list li { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 14px 0; border-top: 1px solid var(--line); }
 .run-list li:last-child { padding-bottom: 0; }

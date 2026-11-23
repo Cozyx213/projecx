@@ -1,0 +1,7 @@
+<li>
+    <span><strong>{{ choice.latest.title }}</strong><small>Version {{ choice.latest.version_number }} · {{ choice.project.get_status_display }}</small></span>
+    <form method="post" action="{% url 'similarity:run' choice.project.pk %}" class="run-form">
+        {% csrf_token %}
+        <button class="button secondary" type="submit">Check</button>
+    </form>
+</li>

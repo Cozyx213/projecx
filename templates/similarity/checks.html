@@ -6,7 +6,7 @@
 <header class="page-heading">
     <span class="eyebrow">Is your idea distinct?</span>
     <h1>Similarity checks</h1>
-    <p class="muted">Compare a proposal with your other projects and with projects other students made public.</p>
+    <p class="muted">Compare a proposal semantically with your other projects and with projects other students made public.</p>
 </header>
 <div class="checks-grid">
     <section class="panel" aria-labelledby="history-heading">
@@ -36,19 +36,22 @@
     </section>
     <aside class="panel" aria-labelledby="run-heading">
         <h2 id="run-heading">Run a check</h2>
-        {% if choices %}
+        {% if unchecked or checked %}
         <p class="small muted">The latest saved version of the project is checked.</p>
-        <ul class="run-list">
-            {% for choice in choices %}
-            <li>
-                <span><strong>{{ choice.latest.title }}</strong><small>Version {{ choice.latest.version_number }} · {{ choice.project.get_status_display }}</small></span>
-                <form method="post" action="{% url 'similarity:run' choice.project.pk %}" class="run-form">
-                    {% csrf_token %}
-                    <button class="button secondary" type="submit">Check</button>
-                </form>
-            </li>
-            {% endfor %}
+        <h3 class="run-group" id="unchecked-heading">Not checked yet <span class="muted">({{ unchecked|length }})</span></h3>
+        {% if unchecked %}
+        <ul class="run-list" aria-labelledby="unchecked-heading">
+            {% for choice in unchecked %}{% include "similarity/run_item.html" %}{% endfor %}
         </ul>
+        {% else %}
+        <p class="small muted">Every project has been checked at least once.</p>
+        {% endif %}
+        {% if checked %}
+        <h3 class="run-group" id="checked-heading">Checked before <span class="muted">({{ checked|length }})</span></h3>
+        <ul class="run-list" aria-labelledby="checked-heading">
+            {% for choice in checked %}{% include "similarity/run_item.html" %}{% endfor %}
+        </ul>
+        {% endif %}
         {% else %}
         <p class="small muted">You need a project before you can run a check.</p>
         <a class="button" href="{% url 'projects:new' %}">Start a project</a>

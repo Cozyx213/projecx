@@ -111,13 +111,18 @@ are local assets. Profile uses a default avatar; image uploads are not implement
 
 ## How similarity is scored
 
-`apps/similarity/engine.py` is plain Python with no extra dependencies. It removes
-common words, reduces words to a rough root, and measures cosine similarity of
-word counts. The score is the average of the whole-proposal similarity and a
-weighted average of the sections both proposals filled in; the problem statement
-and proposed solution weigh the most. Matches below 10% are dropped and the five
-highest are stored. Scores of 70% and above are labelled high, 40% and above
-moderate. Private and archived projects of other accounts are never compared.
+When `OPENAI_API_KEY` is configured in `.env`, `apps/similarity/llm.py` uses OpenAI
+text embeddings (`text-embedding-3-small`) to shortlist semantically related proposals
+and an OpenAI chat model (`gpt-4o-mini`) to score conceptual overlap (0–100%), write
+specific explanations for each match, and generate tailored recommendations.
+
+If `OPENAI_API_KEY` is unset or the API is unavailable, `apps/similarity/engine.py`
+automatically runs as a pure-Python fallback. It removes common words, reduces words
+to a rough root, and measures cosine similarity of word counts (averaging whole-proposal
+similarity with a weighted section average where problem statement and proposed solution
+weigh the most). Matches below 10% are dropped and the five highest are stored. Scores
+of 70% and above are labelled high, 40% and above moderate. Private and archived
+projects of other accounts are never compared.
 
 ## Tests and database verification
 
